@@ -38,8 +38,7 @@ view currentPath =
                         ]
                 }
             , Element.row [ Element.spacing 32, Element.mouseOver [] ]
-                [ twitterLink
-                , highlightableLink currentPath Pages.pages.about.directory "Om"
+                [ highlightableLink currentPath Pages.pages.about.directory "Om"
                 , highlightableLink currentPath Pages.pages.blogg.directory "Blogg"
                 ]
             ]

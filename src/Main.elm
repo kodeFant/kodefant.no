@@ -1,21 +1,17 @@
 module Main exposing (main)
 
 import BlogIndex
-import Color
 import Data.Author as Author
-import Date
-import Element exposing (Element, centerX, column, el, fill, width)
+import Element exposing (Element, centerX, column, el, fill, height, width)
 import Element.Font as Font
 import Element.Region
 import Head
-import Head.Seo as Seo
 import Html exposing (Html)
 import MarkdownRenderer
 import Metadata exposing (Metadata)
-import Pages exposing (images, pages)
+import PageHead exposing (head)
+import Pages
 import Pages.Document
-import Pages.Manifest as Manifest
-import Pages.Manifest.Category
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
@@ -23,22 +19,7 @@ import Palette
 import View.Article
 import View.Header
 import View.Page
-
-
-manifest : Manifest.Config Pages.PathKey
-manifest =
-    { backgroundColor = Just Color.white
-    , categories = [ Pages.Manifest.Category.education ]
-    , displayMode = Manifest.Standalone
-    , orientation = Manifest.Portrait
-    , description = "kodefant.no - Utvikler og historieforteller."
-    , iarcRatingId = Nothing
-    , name = "kodefant"
-    , themeColor = Just Color.white
-    , startUrl = pages.index
-    , shortName = Just "kodefant"
-    , sourceIcon = images.iconPng
-    }
+import Webmanifest exposing (manifest)
 
 
 
@@ -48,6 +29,11 @@ manifest =
 
 type alias Rendered =
     ( Int, List (Element Msg) )
+
+
+canonicalSiteUrl : String
+canonicalSiteUrl =
+    "https://kodefant.no/"
 
 
 main : Pages.Platform.Program Model Msg Metadata Rendered
@@ -125,6 +111,7 @@ view siteMetadata page =
                     body
                         |> Element.layout
                             [ Element.width Element.fill
+                            , height fill
                             , Font.size 20
                             , Font.family [ Font.typeface "Open Sans", Font.sansSerif ]
                             , Font.color (Element.rgba255 0 0 0 0.8)
@@ -146,14 +133,16 @@ pageView model siteMetadata page ( _, viewForPage ) =
         Metadata.FrontPage metadata ->
             { title = metadata.title
             , body =
-                column [ Element.width Element.fill ]
+                column [ Element.width Element.fill, height fill ]
                     [ View.Header.view page.path
-                    , el [ width fill ]
+                    , el [ width fill, height fill ]
                         (column
                             [ Element.padding 50
                             , Element.spacing 40
                             , centerX
                             , Element.Region.mainContent
+                            , Element.centerY
+                            , Element.moveUp 60
                             ]
                             viewForPage
                         )
@@ -198,132 +187,3 @@ pageView model siteMetadata page ( _, viewForPage ) =
                         [ BlogIndex.view siteMetadata ]
                     ]
             }
-
-
-{-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
-<https://htmlhead.dev>
-<https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
-<https://ogp.me/>
--}
-head : Metadata -> List (Head.Tag Pages.PathKey)
-head metadata =
-    case metadata of
-        Metadata.Page meta ->
-            Seo.summaryLarge
-                { canonicalUrlOverride = Nothing
-                , siteName = siteName
-                , image =
-                    { url = images.iconPng
-                    , alt = "elm-pages logo"
-                    , dimensions = Nothing
-                    , mimeType = Nothing
-                    }
-                , description = siteTagline
-                , locale = Nothing
-                , title = meta.title
-                }
-                |> Seo.website
-
-        Metadata.FrontPage meta ->
-            Seo.summaryLarge
-                { canonicalUrlOverride = Nothing
-                , siteName = siteName
-                , image =
-                    { url = images.iconPng
-                    , alt = "kodefant logo"
-                    , dimensions = Nothing
-                    , mimeType = Nothing
-                    }
-                , description = siteTagline
-                , locale = Nothing
-                , title = meta.title
-                }
-                |> Seo.website
-
-        Metadata.Article meta ->
-            Seo.summaryLarge
-                { canonicalUrlOverride = Nothing
-                , siteName = siteName
-                , image =
-                    { url = meta.image
-                    , alt = meta.description
-                    , dimensions = Nothing
-                    , mimeType = Nothing
-                    }
-                , description = meta.description
-                , locale = Nothing
-                , title = meta.title
-                }
-                |> Seo.article
-                    { tags = []
-                    , section = Nothing
-                    , publishedTime = Just (Date.toIsoString meta.published)
-                    , modifiedTime = Nothing
-                    , expirationTime = Nothing
-                    }
-
-        Metadata.Author meta ->
-            let
-                ( firstName, lastName ) =
-                    case meta.name |> String.split " " of
-                        [ first, last ] ->
-                            ( first, last )
-
-                        [ first, middle, last ] ->
-                            ( first ++ " " ++ middle, last )
-
-                        [] ->
-                            ( "", "" )
-
-                        _ ->
-                            ( meta.name, "" )
-            in
-            Seo.summary
-                { canonicalUrlOverride = Nothing
-                , siteName = siteName
-                , image =
-                    { url = meta.avatar
-                    , alt = meta.name
-                    , dimensions = Nothing
-                    , mimeType = Nothing
-                    }
-                , description = meta.bio
-                , locale = Nothing
-                , title = meta.name
-                }
-                |> Seo.profile
-                    { firstName = firstName
-                    , lastName = lastName
-                    , username = Nothing
-                    }
-
-        Metadata.BlogIndex ->
-            Seo.summaryLarge
-                { canonicalUrlOverride = Nothing
-                , siteName = siteName
-                , image =
-                    { url = images.iconPng
-                    , alt = "elm-pages logo"
-                    , dimensions = Nothing
-                    , mimeType = Nothing
-                    }
-                , description = siteTagline
-                , locale = Nothing
-                , title = "elm-pages blog"
-                }
-                |> Seo.website
-
-
-siteName : String
-siteName =
-    "kodeFant"
-
-
-canonicalSiteUrl : String
-canonicalSiteUrl =
-    "https://kodefant.no/"
-
-
-siteTagline : String
-siteTagline =
-    "Utvikler og historieforteller"
