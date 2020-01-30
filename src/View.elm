@@ -62,19 +62,19 @@ pageView :
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Rendered Msg
     -> { title : String, body : Element Msg }
-pageView model siteMetadata page ( count, viewForPage ) =
+pageView _ siteMetadata page ( count, viewForPage ) =
     case page.frontmatter of
         Metadata.Page metadata ->
             { title = metadata.title
             , body =
-                View.Page.view metadata.title viewForPage page model
+                View.Page.view metadata.title viewForPage page
             }
 
         Metadata.FrontPage metadata ->
             { title = metadata.title
             , body =
                 column [ Element.width Element.fill, height fill ]
-                    [ View.Header.view page.path model
+                    [ View.Header.view page.path
                     , el [ width fill, height fill ]
                         (column
                             [ Element.padding 50
@@ -90,7 +90,20 @@ pageView model siteMetadata page ( count, viewForPage ) =
 
         Metadata.Article metadata ->
             { title = metadata.title
-            , body = View.Article.view model count metadata page viewForPage
+            , body = View.Article.view count metadata page viewForPage
+            }
+
+        Metadata.BlogIndex ->
+            { title = "kodeFant.no - Blogg"
+            , body =
+                Element.column [ Element.width Element.fill ]
+                    [ View.Header.view page.path
+                    , Element.column
+                        [ Element.centerX
+                        , Element.paddingXY 0 50
+                        ]
+                        [ BlogIndex.view siteMetadata ]
+                    ]
             }
 
         Metadata.Author author ->
@@ -99,7 +112,7 @@ pageView model siteMetadata page ( count, viewForPage ) =
                 Element.column
                     [ Element.width Element.fill
                     ]
-                    [ View.Header.view page.path model
+                    [ View.Header.view page.path
                     , Element.column
                         [ Element.padding 30
                         , Element.spacing 20
@@ -111,18 +124,5 @@ pageView model siteMetadata page ( count, viewForPage ) =
                         , Author.view [] author
                         , Element.paragraph [ Element.centerX, Font.center ] [ Element.text "viewForPage" ]
                         ]
-                    ]
-            }
-
-        Metadata.BlogIndex ->
-            { title = "kodeFant.no - Blogg"
-            , body =
-                Element.column [ Element.width Element.fill ]
-                    [ View.Header.view page.path model
-                    , Element.column
-                        [ Element.centerX
-                        , Element.paddingXY 0 50
-                        ]
-                        [ BlogIndex.view siteMetadata ]
                     ]
             }

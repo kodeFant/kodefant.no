@@ -8,6 +8,7 @@ import Element
         , alpha
         , centerX
         , centerY
+        , column
         , el
         , fill
         , fillPortion
@@ -113,19 +114,11 @@ smallScreenPreview post =
 largeScreenPreview : Metadata.ArticleMetadata -> Element msg
 largeScreenPreview post =
     row [ spacing 16 ]
-        [ image [ width (fillPortion 2), centerY ]
-            { src = ImagePath.toString post.image
-            , description = "Article cover photo"
-            }
-        , textColumn
-            [ centerX
-            , width fill
-            , spacing 30
-            , Font.size 18
-            , width (fillPortion 2)
-            ]
-            [ title post.title
-            , el [ Font.center ] (text (post.published |> norwegianDate))
+        [ column [ width (fillPortion 2) ]
+            [ image [ centerY, width fill ]
+                { src = ImagePath.toString post.image
+                , description = "Article cover photo"
+                }
             , post.description
                 |> text
                 |> List.singleton
@@ -133,8 +126,18 @@ largeScreenPreview post =
                     [ Font.size 22
                     , Font.center
                     , Font.family [ Font.typeface "Open Sans" ]
+                    , padding 20
                     ]
             , readMoreLink
+            ]
+        , textColumn
+            [ centerX
+            , width fill
+            , spacing 30
+            , width (fillPortion 2)
+            ]
+            [ title post.title
+            , el [ Font.center ] (text (post.published |> norwegianDate))
             ]
         ]
 
@@ -157,7 +160,7 @@ title : String -> Element msg
 title textString =
     [ text textString ]
         |> paragraph
-            [ Font.size 32
+            [ Font.size 38
             , Font.center
             , Font.family [ Font.typeface "Merriweather" ]
             , Font.semiBold

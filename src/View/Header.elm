@@ -8,12 +8,12 @@ import Element.Region as Region
 import Pages
 import Pages.PagePath exposing (PagePath)
 import Palette
-import Types exposing (Model, Msg)
+import Types exposing (Msg)
 import View.Nav exposing (logo, navMenu)
 
 
-view : PagePath Pages.PathKey -> Model -> Element Msg
-view currentPath model =
+view : PagePath Pages.PathKey -> Element Msg
+view currentPath =
     Element.column [ width fill ]
         [ Element.row
             [ paddingXY 25 4
@@ -36,7 +36,7 @@ view currentPath model =
                         [ logo
                         ]
                 }
-            , navMenu currentPath model.mobileMenuVisible
+            , navMenu currentPath
             ]
         , Element.el
             [ Element.height (Element.px 4)

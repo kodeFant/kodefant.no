@@ -6,7 +6,6 @@ import Element
         ( Element
         , alignRight
         , centerX
-        , centerY
         , column
         , fill
         , height
@@ -71,8 +70,8 @@ navLinks currentPath =
     ]
 
 
-navMenu : PagePath Pages.PathKey -> Bool -> Element Msg
-navMenu currentPath mobileMenuVisible =
+navMenu : PagePath Pages.PathKey -> Element Msg
+navMenu currentPath =
     responsiveView
         { mobile = button [] { label = text "Meny", onPress = Just ToggleMobileMenu }
         , medium =

@@ -10,14 +10,19 @@ import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
 import Pages.PagePath exposing (PagePath)
 import Palette
-import Types exposing (Model, Msg)
+import Types exposing (Msg)
 import View.Header
 
 
-view : Model -> Int -> ArticleMetadata -> { path : PagePath Pages.PathKey, frontmatter : Metadata } -> List (Element Msg) -> Element Msg
-view model count metadata page viewForPage =
+view :
+    Int
+    -> ArticleMetadata
+    -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
+    -> List (Element Msg)
+    -> Element Msg
+view count metadata page viewForPage =
     Element.column [ Element.width Element.fill ]
-        [ View.Header.view page.path model
+        [ View.Header.view page.path
         , Element.column
             [ Element.padding 30
             , Element.spacing 40
@@ -36,12 +41,13 @@ view model count metadata page viewForPage =
                             [ Element.text metadata.author.bio ]
                         ]
                     ]
+                 , Palette.blogHeading metadata.title
                  , publishedDateView metadata
                     |> Element.el
                         [ Font.size 16
                         , Font.color (Element.rgba255 0 0 0 0.6)
+                        , Font.center
                         ]
-                 , Palette.blogHeading metadata.title
                  , el [ Font.center ] (text (displayReadingLength count))
                  , articleImageView metadata.image
                  , paragraph [ Font.family [ Font.typeface "Merriweather", Font.sansSerif ], Font.size 24 ] [ text metadata.description ]
