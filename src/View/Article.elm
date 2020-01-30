@@ -1,7 +1,7 @@
 module View.Article exposing (view)
 
 import Data.Author as Author
-import Element exposing (Element, el, paragraph, text)
+import Element exposing (Element, centerX, column, el, paragraph, spacing, text)
 import Element.Font as Font
 import Element.Region
 import Metadata exposing (ArticleMetadata, Metadata)
@@ -31,29 +31,36 @@ view count metadata page viewForPage =
             , Element.centerX
             ]
             [ Element.textColumn [ Element.spacing 24, Element.width Element.fill ]
-                ([ Element.row [ Element.spacing 20 ]
-                    [ Author.view [] metadata.author
-                    , Element.column [ Element.spacing 10, Element.width Element.fill ]
-                        [ Element.paragraph [ Font.bold, Font.size 24 ]
-                            [ Element.text metadata.author.name
-                            ]
-                        , Element.paragraph [ Font.size 16 ]
-                            [ Element.text metadata.author.bio ]
-                        ]
-                    ]
+                ([ bio metadata
                  , Palette.blogHeading metadata.title
-                 , publishedDateView metadata
-                    |> Element.el
-                        [ Font.size 16
-                        , Font.color (Element.rgba255 0 0 0 0.6)
-                        , Font.center
-                        ]
-                 , el [ Font.center ] (text (displayReadingLength count))
+                 , paragraph [ Font.family [ Font.typeface "Merriweather", Font.sansSerif ], Font.size 24, Font.center ] [ text metadata.description ]
+                 , column
+                    [ Font.size 16
+                    , Font.color (Element.rgba255 0 0 0 0.6)
+                    , Font.center
+                    , spacing 10
+                    ]
+                    [ el [ centerX ] (publishedDateView <| metadata)
+                    , el [ centerX ] (text (displayReadingLength count))
+                    ]
                  , articleImageView metadata.image
-                 , paragraph [ Font.family [ Font.typeface "Merriweather", Font.sansSerif ], Font.size 24 ] [ text metadata.description ]
                  ]
                     ++ viewForPage
                 )
+            ]
+        ]
+
+
+bio : ArticleMetadata -> Element msg
+bio metadata =
+    Element.row [ Element.spacing 20 ]
+        [ Author.view [] metadata.author
+        , Element.column [ Element.spacing 10, Element.width Element.fill ]
+            [ Element.paragraph [ Font.bold, Font.size 24 ]
+                [ Element.text metadata.author.name
+                ]
+            , Element.paragraph [ Font.size 16 ]
+                [ Element.text metadata.author.bio ]
             ]
         ]
 

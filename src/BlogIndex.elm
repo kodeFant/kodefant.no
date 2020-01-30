@@ -90,15 +90,15 @@ smallScreenPreview post =
     textColumn
         [ centerX
         , width fill
-        , spacing 30
+        , spacing 10
         , Font.size 18
         ]
         [ image [ height fill, width fill ]
             { src = ImagePath.toString post.image
             , description = "Article cover photo"
             }
-        , title post.title
         , el [ Font.center ] (text (post.published |> norwegianDate))
+        , title post.title
         , post.description
             |> text
             |> List.singleton
@@ -107,7 +107,6 @@ smallScreenPreview post =
                 , Font.center
                 , Font.family [ Font.typeface "Open Sans" ]
                 ]
-        , readMoreLink
         ]
 
 
@@ -136,8 +135,8 @@ largeScreenPreview post =
             , spacing 30
             , width (fillPortion 2)
             ]
-            [ title post.title
-            , el [ Font.center ] (text (post.published |> norwegianDate))
+            [ el [ Font.center ] (text (post.published |> norwegianDate))
+            , title post.title
             ]
         ]
 
@@ -186,7 +185,7 @@ articleIndex metadata =
 
 readMoreLink : Element msg
 readMoreLink =
-    text "Les mer >>"
+    text "Les artikkelen >>"
         |> el
             [ centerX
             , Font.size 18
