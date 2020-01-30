@@ -14,8 +14,8 @@ import Types exposing (Model, Msg)
 import View.Header
 
 
-view : Model -> ArticleMetadata -> { path : PagePath Pages.PathKey, frontmatter : Metadata } -> List (Element Msg) -> Element Msg
-view model metadata page viewForPage =
+view : Model -> Int -> ArticleMetadata -> { path : PagePath Pages.PathKey, frontmatter : Metadata } -> List (Element Msg) -> Element Msg
+view model count metadata page viewForPage =
     Element.column [ Element.width Element.fill ]
         [ View.Header.view page.path model
         , Element.column
@@ -42,6 +42,7 @@ view model metadata page viewForPage =
                         , Font.color (Element.rgba255 0 0 0 0.6)
                         ]
                  , Palette.blogHeading metadata.title
+                 , el [ Font.center ] (text (displayReadingLength count))
                  , articleImageView metadata.image
                  , paragraph [ Font.family [ Font.typeface "Merriweather", Font.sansSerif ], Font.size 24 ] [ text metadata.description ]
                  ]
@@ -65,3 +66,21 @@ articleImageView articleImage =
         { src = ImagePath.toString articleImage
         , description = "Article cover photo"
         }
+
+
+displayReadingLength : Int -> String
+displayReadingLength wordCount =
+    let
+        readingLength : Float
+        readingLength =
+            Debug.log "readlingLength"
+                (toFloat
+                    wordCount
+                    / 265.0
+                )
+    in
+    if readingLength < 1 then
+        "Mindre enn ett minutt"
+
+    else
+        "Lesetid: ca. " ++ String.fromInt (round readingLength) ++ " minutter"

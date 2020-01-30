@@ -14,7 +14,7 @@ import Element
         , moveDown
         , none
         , padding
-        , paragraph
+        , px
         , row
         , spacing
         , text
@@ -33,7 +33,7 @@ import Types exposing (Msg(..))
 
 logo : Element msg
 logo =
-    Element.image [ Element.htmlAttribute (class "logo") ] { src = "/images/logo.svg", description = "" }
+    Element.image [ Element.htmlAttribute (class "logo"), width (px 150) ] { src = "/images/logo.png", description = "" }
 
 
 mobileMenu : Bool -> PagePath Pages.PathKey -> Element Msg
@@ -52,9 +52,9 @@ mobileMenu mobileMenuVisible currentPath =
                 [ link [ centerX ] { label = logo, url = Pages.pages.index |> PagePath.toString }
                 , column
                     [ centerX
-                    , centerY
+                    , moveDown 60
                     , spacing 40
-                    , Font.size 48
+                    , Font.size 32
                     ]
                     (navLinks currentPath)
                 ]

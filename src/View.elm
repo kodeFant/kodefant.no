@@ -42,15 +42,15 @@ view siteMetadata page =
                 in
                 { title = title
                 , body =
-                    body
-                        |> Element.layout
-                            [ Element.width Element.fill
-                            , height fill
-                            , Font.size 20
-                            , Font.family [ Font.typeface "Open Sans", Font.sansSerif ]
-                            , Font.color (Element.rgba255 0 0 0 0.8)
-                            , Element.inFront (mobileMenu model.mobileMenuVisible page.path)
-                            ]
+                    Element.layout
+                        [ Element.width Element.fill
+                        , height fill
+                        , Font.size 20
+                        , Font.family [ Font.typeface "Open Sans", Font.sansSerif ]
+                        , Font.color (Element.rgba255 0 0 0 0.8)
+                        , Element.inFront (mobileMenu model.mobileMenuVisible page.path)
+                        ]
+                        body
                 }
         , head = head page.frontmatter
         }
@@ -62,7 +62,7 @@ pageView :
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Rendered Msg
     -> { title : String, body : Element Msg }
-pageView model siteMetadata page ( _, viewForPage ) =
+pageView model siteMetadata page ( count, viewForPage ) =
     case page.frontmatter of
         Metadata.Page metadata ->
             { title = metadata.title
@@ -90,7 +90,7 @@ pageView model siteMetadata page ( _, viewForPage ) =
 
         Metadata.Article metadata ->
             { title = metadata.title
-            , body = View.Article.view model metadata page viewForPage
+            , body = View.Article.view model count metadata page viewForPage
             }
 
         Metadata.Author author ->
@@ -120,8 +120,8 @@ pageView model siteMetadata page ( _, viewForPage ) =
                 Element.column [ Element.width Element.fill ]
                     [ View.Header.view page.path model
                     , Element.column
-                        [ Element.padding 20
-                        , Element.centerX
+                        [ Element.centerX
+                        , Element.paddingXY 0 50
                         ]
                         [ BlogIndex.view siteMetadata ]
                     ]

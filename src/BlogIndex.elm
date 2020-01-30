@@ -1,13 +1,37 @@
 module BlogIndex exposing (view)
 
-import Data.Author
 import Date
-import Element exposing (Element, fill, moveUp, width)
-import Element.Border
-import Element.Font
+import Design.Responsive exposing (responsiveView)
+import Element
+    exposing
+        ( Element
+        , alpha
+        , centerX
+        , centerY
+        , el
+        , fill
+        , fillPortion
+        , height
+        , image
+        , link
+        , maximum
+        , mouseOver
+        , moveUp
+        , padding
+        , paragraph
+        , rgba255
+        , row
+        , spacing
+        , text
+        , textColumn
+        , width
+        )
+import Element.Border as Border
+import Element.Font as Font
 import Metadata exposing (Metadata(..))
 import Norwegian exposing (norwegianDate)
 import Pages
+import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
 
 
@@ -46,8 +70,73 @@ view posts =
                 |> List.reverse
                 |> List.map postSummary
     in
-    Element.column [ Element.spacing 20, width (fill |> Element.maximum 300), Element.clipX ]
+    Element.column [ Element.spacing 20, padding 10, width (fill |> maximum 900) ]
         filteredPosts
+
+
+postPreview : Metadata.ArticleMetadata -> Element msg
+postPreview post =
+    responsiveView
+        { mobile = smallScreenPreview post
+        , medium =
+            smallScreenPreview post
+        , large = largeScreenPreview post
+        }
+
+
+smallScreenPreview : Metadata.ArticleMetadata -> Element msg
+smallScreenPreview post =
+    textColumn
+        [ centerX
+        , width fill
+        , spacing 30
+        , Font.size 18
+        ]
+        [ image [ height fill, width fill ]
+            { src = ImagePath.toString post.image
+            , description = "Article cover photo"
+            }
+        , title post.title
+        , el [ Font.center ] (text (post.published |> norwegianDate))
+        , post.description
+            |> text
+            |> List.singleton
+            |> paragraph
+                [ Font.size 22
+                , Font.center
+                , Font.family [ Font.typeface "Open Sans" ]
+                ]
+        , readMoreLink
+        ]
+
+
+largeScreenPreview : Metadata.ArticleMetadata -> Element msg
+largeScreenPreview post =
+    row [ spacing 16 ]
+        [ image [ width (fillPortion 2), centerY ]
+            { src = ImagePath.toString post.image
+            , description = "Article cover photo"
+            }
+        , textColumn
+            [ centerX
+            , width fill
+            , spacing 30
+            , Font.size 18
+            , width (fillPortion 2)
+            ]
+            [ title post.title
+            , el [ Font.center ] (text (post.published |> norwegianDate))
+            , post.description
+                |> text
+                |> List.singleton
+                |> paragraph
+                    [ Font.size 22
+                    , Font.center
+                    , Font.family [ Font.typeface "Open Sans" ]
+                    ]
+            , readMoreLink
+            ]
+        ]
 
 
 postSummary :
@@ -60,33 +149,32 @@ postSummary ( postPath, post ) =
 
 linkToPost : PagePath Pages.PathKey -> Element msg -> Element msg
 linkToPost postPath content =
-    Element.link [ Element.width Element.fill ]
+    link [ width fill ]
         { url = PagePath.toString postPath, label = content }
 
 
 title : String -> Element msg
-title text =
-    [ Element.text text ]
-        |> Element.paragraph
-            [ Element.Font.size 36
-            , Element.Font.center
-            , Element.Font.family [ Element.Font.typeface "Raleway" ]
-            , Element.Font.semiBold
-            , Element.padding 16
+title textString =
+    [ text textString ]
+        |> paragraph
+            [ Font.size 32
+            , Font.center
+            , Font.family [ Font.typeface "Merriweather" ]
+            , Font.semiBold
+            , padding 16
             ]
 
 
 articleIndex : Metadata.ArticleMetadata -> Element msg
 articleIndex metadata =
-    Element.el
-        [ Element.centerX
-        , Element.width Element.fill
-        , Element.padding 40
-        , Element.spacing 10
-        , Element.Border.width 1
-        , Element.Border.color (Element.rgba255 0 0 0 0.1)
-        , Element.mouseOver
-            [ Element.Border.color (Element.rgba255 0 0 0 1)
+    el
+        [ centerX
+        , padding 40
+        , spacing 10
+        , Border.width 1
+        , Border.color (rgba255 0 0 0 0.1)
+        , mouseOver
+            [ Border.color (rgba255 0 0 0 1)
             , moveUp 10
             ]
         ]
@@ -95,39 +183,12 @@ articleIndex metadata =
 
 readMoreLink : Element msg
 readMoreLink =
-    Element.text "Les mer >>"
-        |> Element.el
-            [ Element.centerX
-            , Element.Font.size 18
-            , Element.alpha 0.6
-            , Element.mouseOver [ Element.alpha 1 ]
-            , Element.Font.underline
-            , Element.Font.center
+    text "Les mer >>"
+        |> el
+            [ centerX
+            , Font.size 18
+            , alpha 0.6
+            , mouseOver [ alpha 1 ]
+            , Font.underline
+            , Font.center
             ]
-
-
-postPreview : Metadata.ArticleMetadata -> Element msg
-postPreview post =
-    Element.textColumn
-        [ Element.centerX
-        , Element.width Element.fill
-        , Element.spacing 30
-        , Element.Font.size 18
-        ]
-        [ title post.title
-        , Element.row [ Element.spacing 10, Element.centerX, width fill ]
-            [ Data.Author.view [ Element.width (Element.px 40) ] post.author
-            , Element.text post.author.name
-            , Element.text "•"
-            , Element.text (post.published |> norwegianDate)
-            ]
-        , post.description
-            |> Element.text
-            |> List.singleton
-            |> Element.paragraph
-                [ Element.Font.size 22
-                , Element.Font.center
-                , Element.Font.family [ Element.Font.typeface "Raleway" ]
-                ]
-        , readMoreLink
-        ]
