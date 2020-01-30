@@ -73,11 +73,9 @@ displayReadingLength wordCount =
     let
         readingLength : Float
         readingLength =
-            Debug.log "readlingLength"
-                (toFloat
-                    wordCount
-                    / 265.0
-                )
+            toFloat
+                wordCount
+                / 265.0
     in
     if readingLength < 1 then
         "Mindre enn ett minutt"
