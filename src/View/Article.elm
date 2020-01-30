@@ -1,7 +1,6 @@
 module View.Article exposing (view)
 
 import Data.Author as Author
-import Date
 import Element exposing (Element, el, paragraph, text)
 import Element.Font as Font
 import Element.Region
@@ -11,13 +10,14 @@ import Pages
 import Pages.ImagePath as ImagePath exposing (ImagePath)
 import Pages.PagePath exposing (PagePath)
 import Palette
+import Types exposing (Model, Msg)
 import View.Header
 
 
-view : model -> ArticleMetadata -> { path : PagePath Pages.PathKey, frontmatter : Metadata } -> List (Element msg) -> Element msg
-view _ metadata page viewForPage =
+view : Model -> ArticleMetadata -> { path : PagePath Pages.PathKey, frontmatter : Metadata } -> List (Element Msg) -> Element Msg
+view model metadata page viewForPage =
     Element.column [ Element.width Element.fill ]
-        [ View.Header.view page.path
+        [ View.Header.view page.path model
         , Element.column
             [ Element.padding 30
             , Element.spacing 40

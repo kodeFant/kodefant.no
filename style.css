@@ -45,3 +45,28 @@ body::-webkit-scrollbar-thumb {
     transparent
   );
 }
+
+@media (max-width: 576px) {
+  .responsive-medium {
+    display: none !important;
+  }
+  .responsive-large {
+    display: none !important;
+  }
+}
+@media (min-width: 576px) and (max-width: 768px) {
+  .responsive-mobile {
+    display: none !important;
+  }
+  .responsive-large {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  .responsive-mobile {
+    display: none !important;
+  }
+  .responsive-medium {
+    display: none !important;
+  }
+}

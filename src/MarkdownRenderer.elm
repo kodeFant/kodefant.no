@@ -1,4 +1,4 @@
-module MarkdownRenderer exposing (markdownView, pageRenderer)
+module MarkdownRenderer exposing (Rendered, markdownView, pageRenderer)
 
 import Element
     exposing
@@ -31,6 +31,10 @@ import Markdown.Html
 import Markdown.Parser exposing (Renderer)
 import Media.Svgs exposing (quoteSvg)
 import Palette
+
+
+type alias Rendered msg =
+    ( Int, List (Element msg) )
 
 
 markdownView : String -> Result String ( Int, List (Element msg) )

@@ -12,6 +12,7 @@ type alias PaletteColors =
     , white : Color
     , darkestGray : Color
     , lighterGray : Color
+    , black : Color
     }
 
 
@@ -23,6 +24,7 @@ color =
     , darkestGray = rgb255 51 51 51
     , lightGray = rgb255 200 200 200
     , lighterGray = rgb255 237 237 237
+    , black = rgb255 30 30 30
     }
 
 

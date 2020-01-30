@@ -19,7 +19,7 @@ all : List Author
 all =
     [ { name = "Lars Lillo Ulvestad"
       , avatar = Pages.images.author.lillo
-      , bio = "Utvikler og historieforteller. Ansatt som frontendutvikler i Kantega."
+      , bio = "Utvikler og historieforteller. Jobber som frontendutvikler i Kantega."
       }
     ]
 

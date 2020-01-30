@@ -2,7 +2,7 @@ module BlogIndex exposing (view)
 
 import Data.Author
 import Date
-import Element exposing (Element, moveUp)
+import Element exposing (Element, fill, moveUp, width)
 import Element.Border
 import Element.Font
 import Metadata exposing (Metadata(..))
@@ -46,7 +46,7 @@ view posts =
                 |> List.reverse
                 |> List.map postSummary
     in
-    Element.column [ Element.spacing 20 ]
+    Element.column [ Element.spacing 20, width (fill |> Element.maximum 300), Element.clipX ]
         filteredPosts
 
 
@@ -80,7 +80,7 @@ articleIndex : Metadata.ArticleMetadata -> Element msg
 articleIndex metadata =
     Element.el
         [ Element.centerX
-        , Element.width (Element.maximum 800 Element.fill)
+        , Element.width Element.fill
         , Element.padding 40
         , Element.spacing 10
         , Element.Border.width 1
@@ -115,7 +115,7 @@ postPreview post =
         , Element.Font.size 18
         ]
         [ title post.title
-        , Element.row [ Element.spacing 10, Element.centerX ]
+        , Element.row [ Element.spacing 10, Element.centerX, width fill ]
             [ Data.Author.view [ Element.width (Element.px 40) ] post.author
             , Element.text post.author.name
             , Element.text "•"

@@ -6,17 +6,19 @@ import Element.Region
 import Metadata exposing (Metadata)
 import Pages
 import Pages.PagePath exposing (PagePath)
+import Types exposing (Model, Msg)
 import View.Header
 
 
 view :
     String
-    -> List (Element msg)
+    -> List (Element Msg)
     -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
-    -> Element msg
-view title viewForPage page =
+    -> Model
+    -> Element Msg
+view title viewForPage page model =
     textColumn [ Element.width Element.fill ]
-        [ View.Header.view page.path
+        [ View.Header.view page.path model
         , el [ width fill ]
             (column
                 [ Element.padding 30
