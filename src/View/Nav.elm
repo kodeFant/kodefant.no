@@ -97,6 +97,7 @@ highlightableLink currentPath linkDirectory displayName =
         (if isHighlighted then
             [ Font.color Palette.color.primary
             , Element.mouseOver [ Font.color Palette.color.lightGray ]
+            , Element.mouseOver [ Font.color Palette.color.primary ]
             , centerX
             ]
 
