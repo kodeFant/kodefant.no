@@ -16,6 +16,7 @@ import Element
         , image
         , link
         , maximum
+        , mouseDown
         , mouseOver
         , moveUp
         , padding
@@ -34,6 +35,7 @@ import Norwegian exposing (norwegianDate)
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
+import Palette
 
 
 view :
@@ -176,8 +178,9 @@ articleIndex metadata =
         , Border.width 1
         , Border.color (rgba255 0 0 0 0.1)
         , mouseOver
-            [ Border.color (rgba255 0 0 0 1)
-            , moveUp 10
+            [ Border.color Palette.color.primary
+            , moveUp 5
+            , Border.glow Palette.color.primary 2
             ]
         ]
         (postPreview metadata)
