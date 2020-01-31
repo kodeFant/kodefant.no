@@ -25,8 +25,9 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Region as Region
-import Html
-import Html.Attributes
+import Html exposing (Attribute)
+import Html.Attributes exposing (property)
+import Json.Encode as Encode
 import Markdown.Html
 import Markdown.Parser exposing (Renderer)
 import Media.Svgs exposing (quoteSvg)
@@ -237,20 +238,37 @@ orderedList _ _ =
         []
 
 
-codeBlock :
-    { body : String
-    , language : Maybe String
-    }
-    -> Element msg
-codeBlock { body, language } =
-    case language of
+codeBlock : { body : String, language : Maybe String } -> Element msg
+codeBlock details =
+    case details.language of
         Just lang ->
-            column [] [ text lang, text ("codeblock " ++ body) ]
+            Html.node "code-editor"
+                [ editorValue details.body
+                , Html.Attributes.style "white-space" "normal"
+                , Html.Attributes.attribute "language" lang
+                ]
+                []
+                |> Element.html
+                |> Element.el [ Element.width Element.fill ]
 
         Nothing ->
-            column [] [ text ("codeblock " ++ body) ]
+            Html.node "code-editor"
+                [ editorValue details.body
+                , Html.Attributes.style "white-space" "normal"
+                ]
+                []
+                |> Element.html
+                |> Element.el [ Element.width Element.fill ]
 
 
 thematicBreak : Element msg
 thematicBreak =
     el [] (text "Thematic Break")
+
+
+editorValue : String -> Attribute msg
+editorValue value =
+    value
+        |> String.trim
+        |> Encode.string
+        |> property "editorValue"

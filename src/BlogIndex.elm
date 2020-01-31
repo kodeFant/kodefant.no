@@ -16,7 +16,6 @@ import Element
         , image
         , link
         , maximum
-        , mouseDown
         , mouseOver
         , moveUp
         , padding
