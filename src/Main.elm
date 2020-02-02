@@ -1,9 +1,12 @@
 module Main exposing (main)
 
+import Feed
 import MarkdownRenderer exposing (Rendered)
 import Metadata exposing (Metadata)
+import MySitemap
 import Pages
 import Pages.Document
+import Pages.PagePath as PagePath exposing (PagePath)
 import Pages.Platform
 import Types exposing (Model, Msg(..))
 import Update exposing (update)
@@ -33,7 +36,32 @@ main =
         , canonicalSiteUrl = canonicalSiteUrl
         , onPageChange = \_ -> ChangedPage
         , internals = Pages.internals
+        , generateFiles = generateFiles
         }
+
+
+generateFiles :
+    List
+        { path : PagePath Pages.PathKey
+        , frontmatter : Metadata
+        , body : String
+        }
+    ->
+        List
+            (Result String
+                { path : List String
+                , content : String
+                }
+            )
+generateFiles siteMetadata =
+    [ Feed.fileToGenerate { siteTagline = siteTagline, siteUrl = canonicalSiteUrl } siteMetadata |> Ok
+    , MySitemap.build { siteUrl = canonicalSiteUrl } siteMetadata |> Ok
+    ]
+
+
+siteTagline : String
+siteTagline =
+    "kodeFant - Utvikler og historieforteller"
 
 
 markdownDocument : ( String, Pages.Document.DocumentHandler Metadata (Rendered Msg) )
